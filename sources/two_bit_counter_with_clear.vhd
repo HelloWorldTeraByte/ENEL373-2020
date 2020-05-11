@@ -25,7 +25,8 @@ use ieee.std_logic_unsigned.all; -- this is needed for the adder
 -- external (to the FPGA) input and output connections
 entity counter_2bit is
 	port (
-		Clock, CLR : in std_logic;
+		Clock: in std_logic;
+		CLR: in std_logic := '0';
 		Q : out std_logic_vector(1 downto 0)
 	);
 end counter_2bit;

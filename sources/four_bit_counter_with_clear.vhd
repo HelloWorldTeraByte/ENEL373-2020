@@ -8,7 +8,8 @@ use ieee.std_logic_unsigned.all; -- this is needed for the adder
 -- external (to the FPGA) input and output connections
 entity counter_4bit is
 	port (
-		Clock, CLR : in std_logic;
+		Clock : in std_logic;
+		CLR : in std_logic := '0';
 		clk_out : out std_logic;
 		Q : out std_logic_vector(3 downto 0)
 	);
