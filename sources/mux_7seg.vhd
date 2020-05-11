@@ -26,7 +26,7 @@ end mux_7seg;
 architecture Behavioral of mux_7seg is
 
 begin
-	mux_7seg_proc: process (sel)
+	mux_7seg_proc: process (sel, mux_in0, mux_in1, mux_in2, mux_in3)
 		begin
 			case sel is
 				when "00"	=> mux_out <= mux_in0;

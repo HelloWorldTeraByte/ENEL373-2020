@@ -22,9 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity top_level is
     Port ( CLK100MHZ: in STD_LOGIC; 
-           LED : out STD_LOGIC_VECTOR (15 downto 0);
-           SW : in STD_LOGIC_VECTOR (15 downto 0);
-           AN : out STD_LOGIC_VECTOR (7 downto 0);
+           AN : out STD_LOGIC_VECTOR (3 downto 0);
            CA : out STD_LOGIC;
            CB : out STD_LOGIC;
            CC : out STD_LOGIC;
@@ -36,9 +34,8 @@ end top_level;
 
 architecture structural of top_level is
 
-signal clk_div_1, clk_div_1k, clk_div_2k: STD_LOGIC;
---signal dp_message : STD_LOGIC_VECTOR (15 downto 0);
-signal quad_cnt_en, quad_cnt_rest, quad_cnt_overflow  : STD_LOGIC;
+signal clk_div_1, clk_div_1k, clk_div_2k : STD_LOGIC;
+signal quad_cnt_en, quad_cnt_rst, quad_cnt_overflow  : STD_LOGIC;
 signal quad_cnt_1_q, quad_cnt_2_q, quad_cnt_3_q, quad_cnt_4_q : STD_LOGIC_VECTOR (3 downto 0);
 
 component divider_1hz
@@ -56,9 +53,9 @@ component divider_2khz
            Clk_out : out  STD_LOGIC);
 end component;
 
-component quad_4_bit_counter is
-    port ( EN : in STD_LOGIC;
-          R_SET : in STD_LOGIC;
+component quad_4_bit_counter
+    port ( EN : in STD_LOGIC := '1';
+          R_SET : in STD_LOGIC := '0';
           stage_1_q_out : out STD_LOGIC_VECTOR (3 downto 0);
           stage_2_q_out : out STD_LOGIC_VECTOR (3 downto 0);
           stage_3_q_out : out STD_LOGIC_VECTOR (3 downto 0);
@@ -67,7 +64,7 @@ component quad_4_bit_counter is
           overflow : out STD_LOGIC);
 end component;
 
-component display_wrapper is
+component display_wrapper
     port (CLK     : in STD_LOGIC; -- This should be your 'display' clock, the clock that is used to switch between anodes
           Message : in STD_LOGIC_VECTOR (15 downto 0);
           CA, CB, CC, CD, CE, CF, CG : out STD_LOGIC; -- Segment cathodes
@@ -85,7 +82,7 @@ begin
         Clk_out=>clk_div_2k);
 
     quad_4_cnt: quad_4_bit_counter port map(EN=>quad_cnt_en,
-        R_set=>quad_cnt_rest,
+        R_set=>quad_cnt_rst,
         stage_1_q_out=>quad_cnt_1_q,
         stage_2_q_out=>quad_cnt_2_q,
         stage_3_q_out=>quad_cnt_3_q,
@@ -95,13 +92,16 @@ begin
         
         --TODO: Anode is 8 bits but the component only 4 bits
     dp_wrap: display_wrapper port map(CLK=>clk_div_2k,
-             Message=>quad_cnt_4_q & quad_cnt_3_q & quad_cnt_2_q & quad_cnt_1_q,
+             Message(15 downto 12)=>quad_cnt_4_q,
+             Message(11 downto 8)=>quad_cnt_3_q,
+             Message(7 downto 4)=>quad_cnt_2_q,
+             Message(3 downto 0)=>quad_cnt_1_q,
              CA=>CA,
              CB=>CB,
              CC=>CC,
              CD=>CD,
              CE=>CE,
              CF=>CF,
-             CG=>CG
+             CG=>CG,
              AN=>AN);
 end structural;
