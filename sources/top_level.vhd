@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Company: UC
+-- Company: University of Canterbury 
 -- Engineer: Randipa, Jeremy, Geeth
 -- 
 -- Create Date: 06.03.2020 11:13:47
