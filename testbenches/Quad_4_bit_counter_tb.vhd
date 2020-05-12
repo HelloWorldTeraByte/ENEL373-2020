@@ -1,36 +1,21 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
+-- Company: University of Canterbury - ENEL373
+--
 -- Create Date: 04/14/2020 11:50:51 AM
--- Design Name: 
 -- Module Name: Quad_4_bit_counter_TB - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Project Name: Rxn
+-- Target Devices: xc7a100tcsg324-3
+-- Tool Versions: 2019.2
+-- Description: Test bench for quad 4-bit BCD counter.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
+-- Revision: 0.01 - File Created
+--           0.02 - External input removed, asserts added for 9->0 transitions.
 -- Additional Comments:
--- 
+-- Run for at least 1.0001 ms to complete all checks.
 ----------------------------------------------------------------------------------
-
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use std.textio.all;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity Quad_4_bit_counter_TB is
 --  Port ( );
@@ -50,17 +35,16 @@ architecture Behavioral of Quad_4_bit_counter_tb is
    end component;
 
 
-   signal EN : STD_LOGIC;
-   signal R_SET : STD_LOGIC;
-   signal stage_1_q_out : STD_LOGIC_VECTOR (3 downto 0);
-   signal stage_2_q_out : STD_LOGIC_VECTOR (3 downto 0);
-   signal stage_3_q_out : STD_LOGIC_VECTOR (3 downto 0);
-   signal stage_4_q_out : STD_LOGIC_VECTOR (3 downto 0);
-   signal clk_in_ctr : STD_LOGIC;
-   signal overflow : STD_LOGIC;
-   -- signal ClockPeriod : TIME := 50 ns;
-
-   constant ClockPeriod : Time := 1000 ns;
+   signal EN : STD_LOGIC := '0';
+   signal R_SET : STD_LOGIC := '0';
+   signal stage_1_q_out : STD_LOGIC_VECTOR (3 downto 0) := X"0";
+   signal stage_2_q_out : STD_LOGIC_VECTOR (3 downto 0) := X"0";
+   signal stage_3_q_out : STD_LOGIC_VECTOR (3 downto 0) := X"0";
+   signal stage_4_q_out : STD_LOGIC_VECTOR (3 downto 0) := X"0";
+   signal clk_in_ctr : STD_LOGIC := '0';
+   signal overflow : STD_LOGIC := '0';
+   
+   constant ClockPeriod : Time := 100 ns;
 
 begin
 
@@ -72,31 +56,44 @@ begin
    clk_process : process
    begin
       clk_in_ctr <= '0';
-      wait for 500 ns;
+      wait for ClockPeriod / 2;
       clk_in_ctr <= '1';
-      wait for 500 ns;
+      wait for ClockPeriod / 2;
    end process clk_process;
 
-   io_process : process 
-   file infile: text is in "./counter_input.txt";
-   variable fileline : line;
-   variable check : std_logic_vector(18 downto 0);
-
+   io_process : process
    begin
-   while not endfile(infile) loop
-      readline(infile, fileline);
-      read(fileline, check);
-
-      EN <= check(0);
-      R_SET <= check(1);
-      stage_1_q_out <= check(5 downto 2);
-      stage_2_q_out <= check(9 downto 6);
-      stage_1_q_out <= check(13 downto 10);
-      stage_1_q_out <= check(17 downto 14);
-      overflow <= check(18);
-      wait for 5 ns;
-   end loop;
-   wait;
-   end process io_process; 
+     wait for 100 ns;
+     EN <= '1';
+     R_SET <= '0';
+     -- Check initial counter state is 0000: 
+     assert (stage_1_q_out = X"0") and (stage_2_q_out = X"0") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "Initial counter state is not 0000. Test bench will not report errors correctly." severity note; 
+     
+     -- Check 9 to 10 transition:
+     wait for (ClockPeriod * 9);
+     assert (stage_1_q_out = X"9") and (stage_2_q_out = X"0") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "count 9 failed." severity failure;
+     wait for ClockPeriod;
+     assert (stage_1_q_out = X"0") and (stage_2_q_out = X"1") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "count 10 failed." severity failure;
+     
+     -- Check 99 to 100 transition:
+     wait for (ClockPeriod * 89);
+     assert (stage_1_q_out = X"9") and (stage_2_q_out = X"9") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "count 99 failed." severity failure;
+     wait for ClockPeriod;
+     assert (stage_1_q_out = X"0") and (stage_2_q_out = X"0") and (stage_3_q_out = X"1") and (stage_4_q_out = X"0") report "count 100 failed." severity failure;
+     
+     -- Check 999 to 1000 transition:
+     wait for (ClockPeriod * 899);
+     assert (stage_1_q_out = X"9") and (stage_2_q_out = X"9") and (stage_3_q_out = X"9") and (stage_4_q_out = X"0") report "count 999 failed." severity failure;
+     wait for ClockPeriod;
+     assert (stage_1_q_out = X"0") and (stage_2_q_out = X"0") and (stage_3_q_out = X"0") and (stage_4_q_out = X"1") report "count 1000 failed." severity failure;
+     
+     -- Check 9999 to 0000 transition:
+     wait for (ClockPeriod * 8999);
+     assert (stage_1_q_out = X"9") and (stage_2_q_out = X"9") and (stage_3_q_out = X"9") and (stage_4_q_out = X"9") report "count 9999 failed." severity failure;
+     wait for ClockPeriod;
+     assert (stage_1_q_out = X"0") and (stage_2_q_out = X"0") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "count 0000 failed." severity failure;  
+     
+     assert false report "Testbench completed successfully!" severity note;
+  end process io_process;
 
 end Behavioral;
