@@ -68,10 +68,10 @@ begin
         Output=>AN);
 
     mux7seg: mux_7seg port map(sel=>seg_mux_in,
-        mux_in0=>Message(15 downto 12),
-        mux_in1=>Message(11 downto 8),
-        mux_in2=>Message(7 downto 4),
-        mux_in3=>Message(3 downto 0),
+        mux_in3=>Message(15 downto 12),
+        mux_in2=>Message(11 downto 8),
+        mux_in1=>Message(7 downto 4),
+        mux_in0=>Message(3 downto 0),
         mux_out=>bcd_in);
 
     BCD_7SEG: BCD_to_7SEG port map(bcd_in=>bcd_in,

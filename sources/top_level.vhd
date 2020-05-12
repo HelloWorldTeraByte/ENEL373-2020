@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity top_level is
     Port ( CLK100MHZ: in STD_LOGIC; 
-           AN : out STD_LOGIC_VECTOR (3 downto 0);
+           AN : out STD_LOGIC_VECTOR (7 downto 0);
            CA : out STD_LOGIC;
            CB : out STD_LOGIC;
            CC : out STD_LOGIC;
@@ -54,14 +54,14 @@ component divider_2khz
 end component;
 
 component quad_4_bit_counter
-    port ( EN : in STD_LOGIC := '1';
-          R_SET : in STD_LOGIC := '0';
-          stage_1_q_out : out STD_LOGIC_VECTOR (3 downto 0);
-          stage_2_q_out : out STD_LOGIC_VECTOR (3 downto 0);
-          stage_3_q_out : out STD_LOGIC_VECTOR (3 downto 0);
-          stage_4_q_out : out STD_LOGIC_VECTOR (3 downto 0);
-          clk_in_ctr : in STD_LOGIC;
-          overflow : out STD_LOGIC);
+    Port (  EN : in STD_LOGIC := '1';
+            R_SET : in STD_LOGIC := '0';
+            stage_1_q_out : out STD_LOGIC_VECTOR (3 downto 0);
+            stage_2_q_out : out STD_LOGIC_VECTOR (3 downto 0);
+            stage_3_q_out : out STD_LOGIC_VECTOR (3 downto 0);
+            stage_4_q_out : out STD_LOGIC_VECTOR (3 downto 0);
+            clk_in_ctr : in STD_LOGIC;
+            overflow : out STD_LOGIC);
 end component;
 
 component display_wrapper
@@ -72,6 +72,8 @@ component display_wrapper
 end component;
  
 begin
+    AN(7 downto 4) <= "1111";
+
     div1: divider_1hz port map(Clk_in=>CLK100MHZ,
         Clk_out=>clk_div_1);
         
@@ -103,5 +105,5 @@ begin
              CE=>CE,
              CF=>CF,
              CG=>CG,
-             AN=>AN);
+             AN=>AN(3 downto 0));
 end structural;

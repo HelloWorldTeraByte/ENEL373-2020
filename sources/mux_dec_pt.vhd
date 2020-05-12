@@ -45,11 +45,11 @@ begin
 	mux_dec_pt_proc: process (AN, msg_in0, msg_in1, msg_in2, msg_in3)
     begin
         case AN is
-        	when "1110"	=> mux_out <= msg_in0;
+            when "1110"	=> mux_out <= msg_in0;
     	    when "1101"	=> mux_out <= msg_in1;
     	    when "1011"	=> mux_out <= msg_in2;
             when "0111"	=> mux_out <= msg_in3;
-			when others => mux_out <= '1';
+            when others => mux_out <= '1';
         end case;
     end process mux_dec_pt_proc;
 
