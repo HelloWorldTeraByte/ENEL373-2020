@@ -21,8 +21,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity top_level is
-    Port ( CLK100MHZ: in STD_LOGIC; 
+    Port ( CLK100MHZ : in STD_LOGIC; 
+           BTNC : in STD_LOGIC;
+
+           --TODO: Just for debugging
+           SW : in STD_LOGIC_VECTOR (15 downto 0);
+           LED : out STD_LOGIC_VECTOR (15 downto 0);
+
            AN : out STD_LOGIC_VECTOR (7 downto 0);
+           DP : out STD_LOGIC;
            CA : out STD_LOGIC;
            CB : out STD_LOGIC;
            CC : out STD_LOGIC;
@@ -34,9 +41,13 @@ end top_level;
 
 architecture structural of top_level is
 
-signal clk_div_1, clk_div_1k, clk_div_2k : STD_LOGIC;
+signal clk_div_1, clk_div_1k, clk_div_2k, clk_div_4k : STD_LOGIC;
 signal quad_cnt_en, quad_cnt_rst, quad_cnt_overflow  : STD_LOGIC;
 signal quad_cnt_1_q, quad_cnt_2_q, quad_cnt_3_q, quad_cnt_4_q : STD_LOGIC_VECTOR (3 downto 0);
+signal dec_points : std_logic_vector(3 downto 0);
+signal segs : std_logic_vector(1 to 7);
+signal anode : std_logic_vector(3 downto 0);
+signal btnc_debounce_out, btnc_edge_sig, warning_edge_sig: std_logic;
 
 component divider_1hz
     Port ( Clk_in : in  STD_LOGIC;
@@ -70,7 +81,42 @@ component display_wrapper
           CA, CB, CC, CD, CE, CF, CG : out STD_LOGIC; -- Segment cathodes
           AN 		: out STD_LOGIC_VECTOR ( 3 downto 0));
 end component;
- 
+
+component FSM_main
+    Port ( clk : in std_logic;
+            reset : in std_logic := '0';
+            warning_edge: in std_logic;
+            btn_edge : in std_logic;
+            dec_points : out std_logic_vector(3 downto 0);
+            counter_enable : out std_logic);
+end component;
+
+component seg7_control
+    Port (  dec_points : in std_logic_vector(3 downto 0);
+            AN_in : in std_logic_vector(3 downto 0);
+            leds_in: in	std_logic_vector (1 to 7);
+            dp_out : out std_logic;
+            AN_out : out std_logic_vector(3 downto 0);
+            leds_out: out std_logic_vector (1 to 7)
+         );
+end component;
+
+component btn_debouncer
+    port(   Clock : in std_logic;
+                Reset : in std_logic := '0';
+            button_in : in std_logic;
+            pulse_out : out std_logic
+        );
+end component;
+
+component edge_detector
+	port (
+		clk : in std_logic;
+		d : in std_logic;
+		edge : out std_logic
+	);
+end component;
+
 begin
     AN(7 downto 4) <= "1111";
 
@@ -106,4 +152,52 @@ begin
              CF=>CF,
              CG=>CG,
              AN=>AN(3 downto 0));
+
+   --          CA=>segs(1),
+   --          CB=>segs(2),
+   --          CC=>segs(3),
+   --          CD=>segs(4),
+   --          CE=>segs(5),
+   --          CF=>segs(6),
+   --          CG=>segs(7),
+   --          AN=>anode);
+             
+   btnc_debounce : btn_debouncer port map(Clock=>clk_div_2k,
+                    Reset=>open,
+                    button_in=>BTNC,
+                    pulse_out=>btnc_debounce_out);
+
+    btnc_edge : edge_detector port map( clk=>clk_div_2k,
+                d=>btnc_debounce_out,
+                edge=>btnc_edge_sig);
+
+    warning_edge : edge_detector port map( clk=>clk_div_2k,
+                d=>clk_div_1,
+                edge=>warning_edge_sig);
+
+    FSM_controller: FSM_main port map(clk=>clk_div_2k,
+                    reset=>SW(0),
+                    warning_edge=>warning_edge_sig,
+                    btn_edge=>btnc_edge_sig,
+                    dec_points=>dec_points,
+                    counter_enable=>quad_cnt_en);
+
+  --  seg_ctrl: seg7_control port map(dec_points=>dec_points,
+  --              AN_in=>anode,
+  --              leds_in=>segs,
+  --              dp_out=>DP,
+  --              AN_out=>AN(3 downto 0),
+  --              leds_out(1)=>CA,
+  --              leds_out(2)=>CB,
+  --              leds_out(3)=>CC,
+  --              leds_out(4)=>CD,
+  --              leds_out(5)=>CE,
+  --              leds_out(6)=>CF,
+  --              leds_out(7)=>CG);
+
+    LED(0) <= not dec_points(0);
+    LED(1) <= not dec_points(1);
+    LED(2) <= not dec_points(2);
+    LED(3) <= not dec_points(3);
+    LED(5) <= BTNC;
 end structural;
