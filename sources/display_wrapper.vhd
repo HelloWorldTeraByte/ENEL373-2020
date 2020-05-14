@@ -30,7 +30,7 @@ end display_wrapper;
  
 architecture structural of display_wrapper is
 
-signal seg_mux_in : STD_LOGIC_VECTOR (1 downto 0);
+signal seg_mux_in : STD_LOGIC_VECTOR (1 downto 0) := "00";
 signal bcd_in : STD_LOGIC_VECTOR (3 downto 0);
 
 component counter_2bit

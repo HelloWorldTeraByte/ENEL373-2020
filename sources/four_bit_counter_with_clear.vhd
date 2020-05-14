@@ -6,10 +6,10 @@ use ieee.std_logic_unsigned.all; -- this is needed for the adder
 -- external (to the FPGA) input and output connections
 entity counter_4bit is
 	port (
-	    EN : in std_logic := '1';
 		Clock : in std_logic;
+	    EN : in std_logic := '1';
 		CLR : in std_logic := '0';
-		clk_out : out std_logic;
+		clk_out : out std_logic := '0';
 		Q : out std_logic_vector(3 downto 0)
 		);
 end counter_4bit;
@@ -23,12 +23,11 @@ architecture behav of counter_4bit is
  
 begin
 	process (Clock, CLR, EN) -- if either of these signals change,
-	-- run this process
 	begin
 		if (CLR = '1') then -- this is an asynchronous clear
 			tmp <= "0000"; 
-		elsif (EN = '1') then
-			if (Clock'EVENT and Clock = '1') then
+		elsif (Clock'EVENT and Clock = '1') then
+			if(EN ='1') then
 				if tmp = clk_limit then
 					tmp <= "0000";
 					clk_out <= '1'; 
@@ -40,7 +39,6 @@ begin
 				end if;
 			end if; 
 		end if;
- 
 	end process;
  
 	Q <= tmp; -- lastly, copy this internal vector to the output

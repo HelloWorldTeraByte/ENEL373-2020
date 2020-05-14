@@ -33,6 +33,7 @@ begin
 				when "01"	=> mux_out <= mux_in1;
 				when "10"	=> mux_out <= mux_in2;
 				when "11"	=> mux_out <= mux_in3;
+				when others => mux_out <= "0000";
 			end case;
 	end process mux_7seg_proc;
 

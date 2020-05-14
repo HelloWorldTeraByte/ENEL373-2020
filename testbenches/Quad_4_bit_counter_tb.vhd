@@ -94,6 +94,7 @@ begin
      assert (stage_1_q_out = X"0") and (stage_2_q_out = X"0") and (stage_3_q_out = X"0") and (stage_4_q_out = X"0") report "count 0000 failed." severity failure;  
      
      assert false report "Testbench completed successfully!" severity note;
+     wait;
   end process io_process;
 
 end Behavioral;

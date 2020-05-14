@@ -37,11 +37,9 @@ end clock_divider_1k_tb;
 
 architecture Behavioral of clock_divider_1k_tb is
 
-    component my_divider_1k
-        Port (  
-            Clk_in : in STD_LOGIC := '0';
-            Clk_out: out STD_LOGIC
-        );
+    component divider_1khz
+        Port ( Clk_in : in  STD_LOGIC;
+            Clk_out : out  STD_LOGIC);
     end component;
     
     signal div_clk_1ms : std_logic;
@@ -52,7 +50,7 @@ architecture Behavioral of clock_divider_1k_tb is
 
 begin
 
-    UUT: my_divider_1k port map ( Clk_in => clk_1us, Clk_out => div_clk_1ms);
+    UUT: divider_1khz port map ( Clk_in => clk_1us, Clk_out => div_clk_1ms);
 
     -- we also need a clock process, so we define one here.
     clk_process_1us : process

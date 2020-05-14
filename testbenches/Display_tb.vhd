@@ -13,7 +13,7 @@ entity Display_tb is
 end entity;
 
 architecture behavioral of Display_tb is
-component Display_Wrapper is
+component display_wrapper is
   port (CLK     : in STD_LOGIC;
         Message : in STD_LOGIC_VECTOR (15 downto 0);
         CA, CB, CC, CD, CE, CF, CG : out STD_LOGIC;
@@ -33,7 +33,7 @@ constant CLK_period : time := 10 ns;
   
 begin
   -- Unit under test:
-  uut: Display_Wrapper port map (CLK => CLK_sim, Message => Message_sim, CA => C_sim(1), CB => C_sim(2), CC => C_sim(3), CD => C_sim(4), CE => C_sim(5), CF => C_sim(6), CG => C_sim(7), AN => AN_sim);
+  uut: display_wrapper port map (CLK => CLK_sim, Message => Message_sim, CA => C_sim(1), CB => C_sim(2), CC => C_sim(3), CD => C_sim(4), CE => C_sim(5), CF => C_sim(6), CG => C_sim(7), AN => AN_sim);
     
   clk_proc: process is
   begin
@@ -154,4 +154,3 @@ begin
     
     end process;
 end architecture;
-    

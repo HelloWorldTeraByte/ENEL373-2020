@@ -48,7 +48,7 @@ begin
             when "01" => Output <= "1101";
             when "10" => Output <= "1011";
             when "11" => Output <= "0111";
-            when others => Output <= "0000";
+            when others => Output <= "1111";
         end case;
     end process;
         

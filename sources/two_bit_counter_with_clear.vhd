@@ -33,7 +33,7 @@ end counter_2bit;
  
 architecture behav of counter_2bit is 
 	constant clk_limit : std_logic_vector(1 downto 0) := "11";
-	signal tmp : std_logic_vector(1 downto 0); -- internal to FPGA
+	signal tmp : std_logic_vector(1 downto 0) := "00"; -- internal to FPGA
 	-- note, "in" or "out" 
 	-- are invalid
 	-- you can also define components here, and only here.
