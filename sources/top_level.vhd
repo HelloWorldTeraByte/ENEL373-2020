@@ -23,11 +23,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity top_level is
     Port ( CLK100MHZ : in STD_LOGIC; 
            BTNC : in STD_LOGIC;
-
-           --TODO: Just for debugging
-           SW : in STD_LOGIC_VECTOR (15 downto 0);
-           LED : out STD_LOGIC_VECTOR (15 downto 0);
-
            AN : out STD_LOGIC_VECTOR (7 downto 0);
            DP : out STD_LOGIC;
            CA : out STD_LOGIC;
@@ -88,6 +83,7 @@ component FSM_main
             warning_edge: in std_logic;
             btn_edge : in std_logic;
             dec_points : out std_logic_vector(3 downto 0);
+            counter_reset : out std_logic;
             counter_enable : out std_logic);
 end component;
 
@@ -138,31 +134,21 @@ begin
         clk_in_ctr=>clk_div_1k,
         overflow=>quad_cnt_overflow);
         
-        --TODO: Anode is 8 bits but the component only 4 bits
     dp_wrap: display_wrapper port map(CLK=>clk_div_2k,
              Message(15 downto 12)=>quad_cnt_4_q,
              Message(11 downto 8)=>quad_cnt_3_q,
              Message(7 downto 4)=>quad_cnt_2_q,
              Message(3 downto 0)=>quad_cnt_1_q,
-             CA=>CA,
-             CB=>CB,
-             CC=>CC,
-             CD=>CD,
-             CE=>CE,
-             CF=>CF,
-             CG=>CG,
-             AN=>AN(3 downto 0));
-
-   --          CA=>segs(1),
-   --          CB=>segs(2),
-   --          CC=>segs(3),
-   --          CD=>segs(4),
-   --          CE=>segs(5),
-   --          CF=>segs(6),
-   --          CG=>segs(7),
-   --          AN=>anode);
-             
-   btnc_debounce : btn_debouncer port map(Clock=>clk_div_2k,
+             CA=>segs(1),
+             CB=>segs(2),
+             CC=>segs(3),
+             CD=>segs(4),
+             CE=>segs(5),
+             CF=>segs(6),
+             CG=>segs(7),
+             AN=>anode);
+           
+    btnc_debounce : btn_debouncer port map(Clock=>clk_div_2k,
                     Reset=>open,
                     button_in=>BTNC,
                     pulse_out=>btnc_debounce_out);
@@ -176,28 +162,23 @@ begin
                 edge=>warning_edge_sig);
 
     FSM_controller: FSM_main port map(clk=>clk_div_2k,
-                    reset=>SW(0),
+                    reset=>open,
                     warning_edge=>warning_edge_sig,
                     btn_edge=>btnc_edge_sig,
                     dec_points=>dec_points,
+                    counter_reset=>quad_cnt_rst,
                     counter_enable=>quad_cnt_en);
 
-  --  seg_ctrl: seg7_control port map(dec_points=>dec_points,
-  --              AN_in=>anode,
-  --              leds_in=>segs,
-  --              dp_out=>DP,
-  --              AN_out=>AN(3 downto 0),
-  --              leds_out(1)=>CA,
-  --              leds_out(2)=>CB,
-  --              leds_out(3)=>CC,
-  --              leds_out(4)=>CD,
-  --              leds_out(5)=>CE,
-  --              leds_out(6)=>CF,
-  --              leds_out(7)=>CG);
-
-    LED(0) <= not dec_points(0);
-    LED(1) <= not dec_points(1);
-    LED(2) <= not dec_points(2);
-    LED(3) <= not dec_points(3);
-    LED(5) <= BTNC;
+    seg_ctrl: seg7_control port map(dec_points=>dec_points,
+                AN_in=>anode,
+                leds_in=>segs,
+                dp_out=>DP,
+                AN_out=>AN(3 downto 0),
+                leds_out(1)=>CA,
+                leds_out(2)=>CB,
+                leds_out(3)=>CC,
+                leds_out(4)=>CD,
+                leds_out(5)=>CE,
+                leds_out(6)=>CF,
+                leds_out(7)=>CG);
 end structural;
