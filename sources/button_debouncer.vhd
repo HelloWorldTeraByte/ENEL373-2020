@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
--- Company: UC
--- Engineer: Jeremy
--- 
+-- Sourced from: vhdlguru, pwkolas
+-- URL: https://vhdlguru.blogspot.com/2017/09/pushbutton-debounce-circuit-in-vhdl.html
+-- Modified by: Jeremy, Randipa, Geeth
 -- Create Date: 13.05.2020 22:14:45
 -- Design Name: 
 -- Module Name: button_debouncer - Behavioral

@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
+-- Sourced from: vhdlguide, pwkolas
+-- URL: https://vhdlguide.com/2016/07/23/edge-detector/
+-- Modified by: Randipa
 -- Create Date: 13.05.2020 22:16:24
 -- Design Name: 
 -- Module Name: edge_detector - Behavioral

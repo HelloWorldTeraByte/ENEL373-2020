@@ -4,9 +4,10 @@
 -- 
 -- Create Date:    23:24:33 02/07/2011 
 -- Revised Date:   22:01:20 04/03/2019
+-- Modified By: Randipa
 -- Design Name: 
 -- Module Name:    my_divider - Behavioral 
--- Project Name: 	For ENEL373 course on digital logic
+-- Project Name: 	Reaction Timer
 -- Target Devices: Any
 -- Tool versions:  Any
 -- Description:   This clock divider will take a 100MHz clock and divide it down to 1Hz
@@ -41,8 +42,7 @@ entity divider_1hz is
 end divider_1hz;
 
 architecture Behavioral of divider_1hz is
---
-	--constant clk_limit : std_logic_vector(27 downto 0) := X"04C4B3F"; -- 2 Hz output
+
     constant clk_limit : std_logic_vector(27 downto 0) := X"2FAF07E"; -- 1 Hz   "
 
 	signal clk_ctr : std_logic_vector(27 downto 0);

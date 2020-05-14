@@ -1,3 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: UC
+-- Engineer: Jeremy, Randipa, Geeth
+-- 
+-- Create Date: 11.05.2020 11:03:04
+-- Design Name: 
+-- Module Name: quad_4_bit_counter - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 library IEEE;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all; -- this is needed for the adder

@@ -4,9 +4,10 @@
 -- 
 -- Create Date:    23:24:33 02/07/2011 
 -- Revised Date:   22:01:20 04/03/2019
+-- Modified By: Randipa
 -- Design Name: 
 -- Module Name:    my_divider - Behavioral 
--- Project Name: 	For ENEL373 course on digital logic
+-- Project Name: 	Reaction Timer
 -- Target Devices: Any
 -- Tool versions:  Any
 -- Description:   This clock divider will take a 100MHz clock and divide it down to 1Hz

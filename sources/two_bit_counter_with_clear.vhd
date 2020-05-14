@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: UC
+-- Engineer: Randipa
 -- 
 -- Create Date: 11.05.2020 10:29:42
 -- Design Name: 
