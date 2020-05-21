@@ -45,9 +45,11 @@ begin
   
 process(Reset,Clock)
 begin
+    --Asynchronous reset
     if(Reset = '1') then
         state <= idle;
         pulse_out <= '0';
+   --Counting up in the rising edge
    elsif(rising_edge(Clock)) then
         case (state) is
             when idle =>

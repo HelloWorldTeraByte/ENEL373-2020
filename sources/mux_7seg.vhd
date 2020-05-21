@@ -13,7 +13,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 -- Purpose: VHDL Module for BCD to 7-segment Decoder
 -- Usage: Laboratory 1; Example VHDL file for ENEL353
 
---TODO: Change the naming
+--Controls which data should be displayed on the 7 seg display
 entity mux_7seg is
 		   Port ( sel: in std_logic_vector (1 downto 0);
 		          mux_in0 : in std_logic_vector (3 downto 0);
@@ -24,8 +24,8 @@ entity mux_7seg is
 end mux_7seg;
 
 architecture Behavioral of mux_7seg is
-
 begin
+	--For each counter input output one input
 	mux_7seg_proc: process (sel, mux_in0, mux_in1, mux_in2, mux_in3)
 		begin
 			case sel is

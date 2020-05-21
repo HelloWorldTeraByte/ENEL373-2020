@@ -46,12 +46,13 @@ begin
 		if (CLR = '1') then -- this is an asynchronous clear
 			tmp <= "0000"; 
 		elsif (Clock'EVENT and Clock = '1') then
+			--synchronous enable
 			if(EN ='1') then
 				if tmp = clk_limit then
 					tmp <= "0000";
-					clk_out <= '1'; 
+					clk_out <= '1';	--Clock out high in the overflow state, And remain high till the next clock
 				else
-						clk_out <= '0';
+						clk_out <= '0';	--The clock out is a pule in the latter stages of the counters
 						tmp <= tmp + 1; -- Counters uses flip-flops to
 						-- "remember" the last count,
 						-- which can then be added to.

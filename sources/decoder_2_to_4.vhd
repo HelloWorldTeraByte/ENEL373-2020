@@ -33,6 +33,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+--The counter is used to turn the 7 seg displays on an off
 entity decoder_2_to_4 is
     port ( Select_vector : in STD_LOGIC_VECTOR (1 downto 0);
            Output : out STD_LOGIC_VECTOR (3 downto 0));
@@ -41,6 +42,8 @@ end decoder_2_to_4;
 architecture Behavioral of decoder_2_to_4 is
 begin
 
+    --Each counter value corresponds to which 7seg display to turn on
+    --The output value is passed to the anode, which is active low
     process (Select_vector)
     begin
         case Select_vector is

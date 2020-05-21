@@ -19,14 +19,18 @@
 ----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
+
 entity edge_detector is
 	port (
-		clk : in std_logic;
-		d : in std_logic;
-		edge : out std_logic
+		clk : in std_logic; --Main clock input
+		d : in std_logic;	--The data to be edge detected
+		edge : out std_logic --The edge output, The output pulse lasts one clock cycle
 	);
 end edge_detector;
 
+--Use two flip flops to detect the rising edge of the input
+--First FF is used to synchronize the asynchronous input
+--Second FF detects the rising edge and only outputs a pulse for a clock cycle
 architecture behavioural of edge_detector is
 	signal reg1 : std_logic;
 	signal reg2 : std_logic;

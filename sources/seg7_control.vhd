@@ -17,8 +17,6 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -53,14 +51,17 @@ component mux_dec_pt
 end component;
 
 begin
-    AN_out <= AN_in;
-    mux_dec : mux_dec_pt port map(sel=>AN_in,
+    AN_out <= AN_in; --Pass thought the anode data
+
+    mux_dec : mux_dec_pt port map(sel=>AN_in, --Anode is used as the select bit
                 msg_in0=>dec_points(0),
                 msg_in1=>dec_points(1),
                 msg_in2=>dec_points(2),
                 msg_in3=>dec_points(3),
-                mux_out=>dp_out
+                mux_out=>dp_out     --The mux output is used as the decimal point control
                 );
+    
+    --Only pass through the segment data if all the decimal points are off
     leds_out <= leds_in when dec_points = "1111" else
                 "1111111";
 

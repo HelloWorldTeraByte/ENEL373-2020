@@ -43,7 +43,6 @@ begin
 	-- run this process
 	begin
 		if (CLR = '1') then -- this is an asynchronous clear
- 
 			tmp <= "00"; 
  
 		elsif (Clock'EVENT and Clock = '1') then

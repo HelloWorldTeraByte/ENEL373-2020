@@ -29,6 +29,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+--Controls which decimal point is needed to displayed 
+--The msg_in* is the bit of the decimal point vector
+--The dp is turned on and off rapidly using the decoded anode as the control
 entity mux_dec_pt is
     Port (sel : in std_logic_vector(3 downto 0);
           msg_in0 : in std_logic;
@@ -42,6 +45,7 @@ architecture Behavioral of mux_dec_pt is
 
 begin
 
+    --Output the decimal point based on the anode as the select vector
 	mux_dec_pt_proc: process (sel, msg_in0, msg_in1, msg_in2, msg_in3)
     begin
         case sel is
