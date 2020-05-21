@@ -20,17 +20,18 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+--Component encapsulate all the display functionalities
 entity display_wrapper is
-    port (CLK     : in STD_LOGIC; -- This should be your 'display' clock, the clock that is used to switch between anodes
-          Message : in STD_LOGIC_VECTOR (15 downto 0);
+    port (CLK     : in STD_LOGIC; --The clock used to switch between the 7seg displays
+          Message : in STD_LOGIC_VECTOR (15 downto 0); --The data to be displayed on the 7seg, the quad counter number
           CA, CB, CC, CD, CE, CF, CG : out STD_LOGIC; -- Segment cathodes
-          AN 		: out STD_LOGIC_VECTOR ( 3 downto 0));
+          AN 		: out STD_LOGIC_VECTOR ( 3 downto 0)); --Anodes
 end display_wrapper;
   
  
 architecture structural of display_wrapper is
 
-signal seg_mux_in : STD_LOGIC_VECTOR (1 downto 0) := "00";
+signal seg_mux_in : STD_LOGIC_VECTOR (1 downto 0) := "00"; --Needs to start at zero for testbench
 signal bcd_in : STD_LOGIC_VECTOR (3 downto 0);
 
 component counter_2bit
@@ -60,13 +61,16 @@ component BCD_to_7SEG
 end component;
 
 begin
+    --Counter is used to switch between the 7seg displays
     cnt_2_bit: counter_2bit port map(Clock=>CLK,
         CLR=>open,
         Q=>seg_mux_in);
 
+    --Decoder is used to decode from the counter into the anodes
     dec_2_4: decoder_2_to_4 port map(Select_vector=>seg_mux_in,
         Output=>AN);
 
+    --Controls which data needs to be selected with the counter as the select vector
     mux7seg: mux_7seg port map(sel=>seg_mux_in,
         mux_in3=>Message(15 downto 12),
         mux_in2=>Message(11 downto 8),
@@ -74,6 +78,7 @@ begin
         mux_in0=>Message(3 downto 0),
         mux_out=>bcd_in);
 
+    --Convert from binary coded decimal to 7 segment data
     BCD_7SEG: BCD_to_7SEG port map(bcd_in=>bcd_in,
         leds_out(1)=>CA,
         leds_out(2)=>CB,
